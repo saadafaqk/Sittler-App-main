@@ -61,12 +61,7 @@ class _BookingListState extends State<BookingList> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            foregroundColor: Color(0xff004aa0),
-            elevation: 0,
-          ),
+      
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("table-book")
@@ -86,72 +81,27 @@ class _BookingListState extends State<BookingList> {
                   return Card(
                     elevation: 1,
                     child: ListTile(
-                      // leading: Image.network(
-                      //   userParent.get('userModel.imageUrl'),
-                      // // ),
-                      // title: Text(userParent.get('userModel.fullName')),
-                      // subtitle: Text(userParent.get('userModel.clientAddress')),
+                      leading: Image.network(
+                        userParent.get('userModel.imageUrl'),
+                      ),
+                      title: Text(userParent.get('userModel.fullName')),
+                      subtitle: Text(userParent.get('userModel.clientAddress')),
                       onTap: () {
                         showModalBottomSheet(
                             backgroundColor: Colors.white,
+                            
                             shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20))),
-                            elevation: 20,
+                            elevation: 10,
                             context: context,
                             builder: (context) {
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Material(
-                                      elevation: 5,
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.orange,
-                                      child: MaterialButton(
-                                          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                          minWidth: MediaQuery.of(context).size.width,
-                                          onPressed: () async {},
-                                          child: const Text(
-                                            "Cancel Transaction",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                            ),
-                                          )),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Material(
-                                      elevation: 5,
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.blue,
-                                      child: MaterialButton(
-                                          padding:
-                                              const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                          minWidth: MediaQuery.of(context).size.width,
-                                          onPressed: () async {
-                                            Navigator.of(context).pop();
-                                            RouteNavigator.gotoPage(
-                                                context,
-                                                ChatToParent(
-                                                    parentInfo: BookModel.fromMap(
-                                                        userParent.data())));
-                                          },
-                                          child: const Text(
-                                            "Send Message",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                            ),
-                                          )),
-                                    ),
-                                  ),
+                                  
+                                  
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Material(
@@ -180,6 +130,58 @@ class _BookingListState extends State<BookingList> {
                                           )),
                                     ),
                                   ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Material(
+                                      elevation: 5,
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: const Color(0xff004aa0),
+                                      child: MaterialButton(
+                                          padding:
+                                              const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                          minWidth: MediaQuery.of(context).size.width,
+                                          onPressed: () async {
+                                            Navigator.of(context).pop();
+                                            RouteNavigator.gotoPage(
+                                                context,
+                                                ChatToParent(
+                                                    parentInfo: BookModel.fromMap(
+                                                        userParent.data())));
+                                          },
+                                          child: const Text(
+                                            "Send Message",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Material(
+                                      elevation: 5,
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.red,
+                                      child: MaterialButton(
+                                          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                          minWidth: MediaQuery.of(context).size.width,
+                                          onPressed: () async {},
+                                          child: const Text(
+                                            "Cancel Booking",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+
+
                                 ],
                               );
                             });

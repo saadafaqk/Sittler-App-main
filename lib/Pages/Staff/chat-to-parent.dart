@@ -16,7 +16,6 @@ class ChatToParent extends StatefulWidget {
 }
 
 class _ChatToParentState extends State<ChatToParent> {
-  String getTokenId = "";
   User? user = FirebaseAuth.instance.currentUser;
 
   final messageTextController = TextEditingController();
@@ -76,16 +75,6 @@ class _ChatToParentState extends State<ChatToParent> {
   @override
   void initState() {
     super.initState();
-
-    FirebaseFirestore.instance
-        .collection("table-staff")
-        .where("email", isEqualTo: widget.parentInfo.userModel!['email'].toString())
-        .get()
-        .then((value) {
-      getTokenId = value.docs.first.get('tokenId');
-
-      setState(() {});
-    });
   }
 
   @override

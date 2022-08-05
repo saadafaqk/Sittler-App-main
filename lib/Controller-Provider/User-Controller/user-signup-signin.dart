@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sittler_app/Admin/admin-dashboard.dart';
 import 'package:sittler_app/Model/user-model.dart';
-import 'package:sittler_app/Pages/Onboarding-Screen/verifyuser.dart';
+import 'package:sittler_app/Pages/Onboarding-Screen/onboarding.dart';
 import 'package:sittler_app/Pages/Staff/staff-home.dart';
 import 'package:sittler_app/Pages/User/user-home.dart';
 import 'package:sittler_app/Route-Navigator/route-navigator.dart';
@@ -83,7 +85,7 @@ class SignUpSignInController with ChangeNotifier {
       Navigator.of(context).pop();
       switch (error.code) {
         case "invalid-email":
-          errorMessage = "Your email address appears to be malformed.";
+          errorMessage = "Your email address appears to be invalid.";
           break;
         case "wrong-password":
           errorMessage = "Your password is wrong.";
@@ -123,7 +125,9 @@ class SignUpSignInController with ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) async {
         User? usr = FirebaseAuth.instance.currentUser;
-        if (usr!.displayName != "Staff") {
+        if (email == "admin@gmail.com" && password == "admin123") {
+          RouteNavigator.gotoPage(context, const AdminDashboard());
+        } else if (usr!.displayName != "Staff") {
           RouteNavigator.gotoPage(context, const UserHome());
         } else {
           RouteNavigator.gotoPage(context, const StaffHome());
@@ -137,7 +141,7 @@ class SignUpSignInController with ChangeNotifier {
       Navigator.of(context).pop();
       switch (error.code) {
         case "invalid-email":
-          errorMessage = "Your email address appears to be malformed.";
+          errorMessage = "Your email address appears to be invalid.";
 
           break;
         case "wrong-password":
@@ -163,11 +167,46 @@ class SignUpSignInController with ChangeNotifier {
     }
   }
 
+  editProfile(
+      String? uid, String? imageUrl, UserModel userModel, BuildContext context) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    try {
+      await FirebaseFirestore.instance.collection('table-user-client').doc(uid).update({
+        "fullName": userModel.fullName,
+        "address": userModel.address,
+        "contactNumber": userModel.contactNumber,
+        "imageUrl": imageUrl,
+      }).whenComplete(() async {
+        await FirebaseFirestore.instance
+            .collection("table-book")
+            .where("userModel.uid", isEqualTo: uid)
+            .get()
+            .then((result) {
+          for (var result in result.docs) {
+            print(result.id);
+            // update also the table book image property
+            FirebaseFirestore.instance.collection('table-book').doc(result.id).update({
+              "userModel.imageUrl": imageUrl,
+            }).whenComplete(() {
+              Fluttertoast.showToast(msg: "Successfully Save Changes");
+            });
+          }
+        });
+
+        print("success!");
+      });
+    } on FirebaseException {
+      // print(error);
+      Fluttertoast.showToast(msg: "Something went wrong !!!");
+    }
+  }
+
   // the logout function
   static Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
 
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => const verifyuser()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => const Onboarding()));
   }
 }

@@ -37,19 +37,19 @@ class _OnboardingState extends State<Onboarding> {
                 "images/start2.png",
                 " ",
                 "The Marketplace to hire Babysitters",
-                "WELCOME TO SITTLERS!",
+                "Welcome to Sittlers!",
                 Colors.white),
                 pageViewContent(
-                "images/start2.png",
+                "images/image4.png",
                 " ",
-                "The Marketplace to hire Babysitters",
-                "WELCOME TO SITTLERS!",
+                " ",
+                "Connect With Top Best Babysitters In Your Area",
                 Colors.white),
                 pageViewContent(
-                "images/start2.png",
+                "images/image5.png",
                 " ",
-                "The Marketplace to hire Babysitters",
-                "WELCOME TO SITTLERS!",
+                "",
+                "Find Responsible Babysitters For Your Toddler",
                 Colors.white),
           ],
         ),
@@ -157,7 +157,7 @@ class _OnboardingState extends State<Onboarding> {
           textAlign: TextAlign.center,
           text: TextSpan(
               text: description,
-              style: const TextStyle(fontSize: 30.0, color: Colors.black),
+              style: const TextStyle(fontSize: 30.0, color: Colors.black, fontWeight: FontWeight.bold),
               children: const <TextSpan>[
                 // TextSpan(
                 //   text: "For NY Apartments",

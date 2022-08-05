@@ -9,7 +9,7 @@ class ProgressDialog extends StatelessWidget {
     return Dialog(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0))),
-      backgroundColor: const Color(0xff004aa0),
+      // backgroundColor: const Color(0xff004aa0),
       child: Container(
         margin: const EdgeInsets.all(15.0),
         width: double.infinity,

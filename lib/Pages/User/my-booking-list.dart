@@ -18,12 +18,12 @@ class _MyBookingListState extends State<MyBookingList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xff004aa0),
-            elevation: 0,
-          ),
+      // appBar: AppBar(
+      //       centerTitle: true,
+      //       backgroundColor: Colors.white,
+      //       foregroundColor: const Color(0xff004aa0),
+      //       elevation: 0,
+      //     ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("table-book")

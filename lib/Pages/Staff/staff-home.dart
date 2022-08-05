@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-signin.dart';
+import 'package:sittler_app/Widgets/sizebox.dart';
 import 'package:sittler_app/Pages/Staff/staff_settings.dart';
 
 import 'booking-list.dart';
@@ -19,7 +23,7 @@ class _StaffHomeState extends State<StaffHome> {
   final int _counter = 0;
 
 final screens = [
-Center(child: Text('Home', style: TextStyle(fontSize: 60),),),
+const Center(child: Text('Home', style: TextStyle(fontSize: 60),),),
 const BookingList(),
 const Center(child: Text('Chat', style: TextStyle(fontSize: 60),),),
 const staffsettings(),
@@ -59,80 +63,74 @@ const staffsettings(),
       },
       child: Scaffold(
         key: _key,
-        
-        // appBar: AppBar(
-        //   //automaticallyImplyLeading: false, //remove arrow back icon
-        //   centerTitle: true,
-        //   title: const Text("Staff Home"),
-
-        //   actions: [
-        //     Switch(
-        //         value: isDark,
-        //         onChanged: (newValue) {
-        //           context.read<ThemeManager>().toggleTheme(newValue);
-        //         })
-        //   ],
-        // ),
         appBar: AppBar(
-            centerTitle: false,
-            
+            centerTitle: true,
+            title: const Text(""),
             backgroundColor: Colors.white,
             foregroundColor: const Color(0xff004aa0),
             elevation: 0,
+
+          //   actions: [
+          //   Switch(
+          //       value: isDark,
+          //       onChanged: (newValue) {
+          //         context.read<ThemeManager>().toggleTheme(newValue);
+          //       })
+          // ],
+
+          actions: [
+            ElevatedButton(onPressed: (){SignUpSignInController.logout(context);}, child: const Text("SIGN OUT",
+                    style: TextStyle(
+                        fontSize: 16, letterSpacing: 2.2, color: Colors.black)),)
+          ],
             
           ),
+        
+
 
           body: 
-        // drawer: const StaffDrawer(),
-        // body: StreamBuilder(
-        //   stream: FirebaseFirestore.instance
-        //       .collection("table-staff")
-        //       .where('email', isEqualTo: user!.email)
-        //       .snapshots(),
-        //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
-        //     final currentUser = snapshot.data?.docs;
+        StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("table-staff")
+              .where('email', isEqualTo: user!.email)
+              .where('active', isEqualTo: true)
+              .snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
+            //final currentUser = snapshot.data?.docs;
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.orange,
+              ));
+            }
+            if (snapshot.hasError) {
+              return const Text('Error');
+            } else if (snapshot.data!.docs.isEmpty) {
+              return const Center(
+                  child: Text(
+                      "The admin will confirm your request in order to activate your account.", textAlign: TextAlign.center,));
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    addVerticalSpace(10),
+                    const Text(
+                      'Hi, Welcome to Baby Sittler App ',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    // addVerticalSpace(50),
+                    // ElevatedButtonStyle.elevatedButton("List of Sittlers", onPressed: () {
+                    //   RouteNavigator.gotoPage(context, BookAnAppointment());
+                    // }),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
 
-        //     if (snapshot.hasData) {
-        //       return Center(
-        //         child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             addVerticalSpace(10),
-        //             Text(
-        //               'Hi ' '${currentUser![0]['fullName']}',
-        //               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        //             ),
-        //             // addVerticalSpace(50),
-        //             // ElevatedButtonStyle.elevatedButton("List of Sittlers", onPressed: () {
-        //             //   RouteNavigator.gotoPage(context, BookAnAppointment());
-        //             // }),
-        //           ],
-        //         ),
-        //       );
-        //       //   Container(
-        //       //   height: 400,
-        //       //   child: GridView(
-        //       //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //       //           crossAxisCount: 3, mainAxisSpacing: 16, crossAxisSpacing: 16),
-        //       //       children: [
-        //       //         Image.network('https://picsum.photos/250?image=1'),
-        //       //         Image.network('https://picsum.photos/250?image=2'),
-        //       //         Image.network('https://picsum.photos/250?image=3'),
-        //       //         Image.network('https://picsum.photos/250?image=1'),
-        //       //         Image.network('https://picsum.photos/250?image=2'),
-        //       //         Image.network('https://picsum.photos/250?image=3'),
-        //       //       ]),
-        //       // );
-        //     } else {
-        //       return const Center(
-        //           child: CircularProgressIndicator(
-        //         color: Colors.black,
-        //       ));
-        //     }
-        //   },
-        // ),
-
-        screens[_currentIndex],
+        // screens[_currentIndex],
     
 
       bottomNavigationBar: BottomNavyBar(
@@ -174,3 +172,4 @@ const staffsettings(),
     );
   }
 }
+

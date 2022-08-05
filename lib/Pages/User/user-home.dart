@@ -1,17 +1,12 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-// import 'package:provider/src/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:sittler_app/Pages/User/my-booking-list.dart';
-// import 'package:sittler_app/Pages/User/chat-to-staff.dart';
 import 'package:sittler_app/Pages/User/parent_settings.dart';
-// import 'package:sittler_app/Route-Navigator/route-navigator.dart';
-// import 'package:sittler_app/Widgets/elevated-button.dart';
-// import 'package:sittler_app/Widgets/sizebox.dart';
-// import 'package:sittler_app/Widgets/user-drawer.dart';
+import 'package:sittler_app/Pages/User/user_chat.dart';
+import 'package:sittler_app/Pages/User/user_dashboard.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'book-an-appointment-list.dart';
 
@@ -28,11 +23,12 @@ class _UserHomeState extends State<UserHome> {
   final int _counter = 0;
 
 final screens = [
-const Center(child: Text('Home', style: TextStyle(fontSize: 60),),),
-BookAnAppointment(),
+const user_dash(),
+ BookAnAppointment(),
 const MyBookingList(),
-const Center(child: Text('Chat', style: TextStyle(fontSize: 60),),),
-const parent_settings(),
+const user_chat(),
+// const Center(child: Text('Chat', style: TextStyle(fontSize: 60),),),
+const UserDrawer()
 ];
 
 
@@ -69,6 +65,7 @@ const parent_settings(),
           return true;
         }
       },
+      
       child: Scaffold(
         key: _key,
         appBar: AppBar(
@@ -79,6 +76,7 @@ const parent_settings(),
           ),
         // drawer: const UserDrawer(),
         body:
+        
         // StreamBuilder(
         //   stream: FirebaseFirestore.instance
         //       .collection("table-user-client")
@@ -94,27 +92,8 @@ const parent_settings(),
         //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         //           crossAxisAlignment: CrossAxisAlignment.center,
         //           children: [
-        //             // AspectRatio(
-        //             //   aspectRatio: 3 / 2,
-        //             //   child: Container(
-        //             //     width: MediaQuery.of(context).size.width,
-        //             //     decoration: const BoxDecoration(
-        //             //       image: DecorationImage(
-        //             //         fit: BoxFit.fill,
-        //             //         image: NetworkImage(
-        //             //             "https://i0.wp.com/post.healthline.com/wp-content/uploads/2020/09/617480-product-roundup-The-Best-Car-Seat-Stroller-Combos-or-Travel-Systems-1296x728-Header_e1be83.jpg?w=1155&h=1528"),
-        //             //       ),
-        //             //     ),
-        //             //   ),
-        //             // ),
-        //             addVerticalSpace(100),
-        //             ElevatedButtonStyle.elevatedButton("Book An Appointment",
-        //                 onPressed: () {
-        //               RouteNavigator.gotoPage(context, BookAnAppointment());
-        //               //RouteNavigator.gotoPage(context, MapScreen());
-        //             }),
-        //             addVerticalSpace(10),
-        //           ],
+
+        //           ]
         //         ),
         //       );
         //     } else {
@@ -126,6 +105,7 @@ const parent_settings(),
         //   },
         // ),
         screens[_currentIndex],
+        
     
 
       bottomNavigationBar: BottomNavyBar(

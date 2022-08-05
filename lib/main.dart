@@ -25,7 +25,7 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   /// On click listner
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 }
 
 Future<void> main() async {
@@ -56,9 +56,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var userLoggedIn;
-
-
-
 
   late AndroidNotificationChannel channel;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -101,6 +98,21 @@ class _MyAppState extends State<MyApp> {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
+  }
+
+   tapNotificationBar() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.data.isNotEmpty) {
+        // navigatorKey.currentState
+        //     ?.push(MaterialPageRoute(builder: (_) => const MyBookingList()));
+        navigatorKey.currentState!.pushNamed('/user-mybookinglist');
+        print("Navigate To My Booking List");
+      } else {
+        print("Navigate To Home Page");
+      }
+      print(message.notification!.body);
+      setState(() {});
+    });
   }
 
   @override
@@ -148,21 +160,6 @@ class _MyAppState extends State<MyApp> {
     } else {
       print('User declined or has not accepted permission');
     }
-  }
-
-  tapNotificationBar() {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      print("Navigate To Home Page");
-      print(message.notification!.body);
-      if (message.data.isNotEmpty) {
-        // navigatorKey.currentState
-        //     ?.push(MaterialPageRoute(builder: (_) => const MyBookingList()));
-        await navigatorKey.currentState!.pushNamed('/user-mybookinglist');
-        print("Navigate To My Booking List");
-      } else {
-        print("Navigate To Home Page");
-      }
-    });
   }
 
   void listenFCM() async {
@@ -265,11 +262,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: context.watch<ThemeManager>().themeMode,
+      // themeMode: context.watch<ThemeManager>().themeMode,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData.from(colorScheme: const ColorScheme.light()),
-  darkTheme: ThemeData.from(colorScheme: const ColorScheme.dark()),
+      title: 'Sittler',
+  //      theme: ThemeData.from(colorScheme: const ColorScheme.light()),
+  // darkTheme: ThemeData.from(colorScheme: const ColorScheme.dark()),
       navigatorKey: navigatorKey,
       home: userLoggedIn == "User Client"
           ? const UserHome()

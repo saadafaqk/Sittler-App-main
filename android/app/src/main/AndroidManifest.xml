@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sittler_app">
 
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -13,7 +13,7 @@
 
    <application
 
-        android:label="Sittler Baby"
+        android:label="Sittler"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
@@ -63,7 +63,7 @@
 
        <meta-data
            android:name="com.google.firebase.messaging.default_notification_channel_id"
-           android:value="mychanel"
+           android:value="Sittler"
            />
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyBGsnZi4m_27F0vbiGFRRSRWvTtzFdsZss"/>

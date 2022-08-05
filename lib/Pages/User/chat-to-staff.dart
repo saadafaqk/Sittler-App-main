@@ -9,20 +9,16 @@ import 'package:http/http.dart' as http;
 class ChatToStaff extends StatefulWidget {
   final BookModel staffInfo;
   const ChatToStaff({required this.staffInfo});
-  
 
   @override
   _ChatToStaffState createState() => _ChatToStaffState();
 }
 
 class _ChatToStaffState extends State<ChatToStaff> {
-  String getTokenId = "";
   User? user = FirebaseAuth.instance.currentUser;
 
   final messageTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  getTokenUserStaff() {}
 
   void sendPushMessage(String token, String title, String body) async {
     try {
@@ -78,16 +74,6 @@ class _ChatToStaffState extends State<ChatToStaff> {
   @override
   void initState() {
     super.initState();
-
-    FirebaseFirestore.instance
-        .collection("table-staff")
-        .where("email", isEqualTo: widget.staffInfo.userStaff!['email'].toString())
-        .get()
-        .then((value) {
-      getTokenId = value.docs.first.get('tokenId');
-
-      setState(() {});
-    });
   }
 
   @override
@@ -161,7 +147,7 @@ class _ChatToStaffState extends State<ChatToStaff> {
                 flex: 1,
                 child: Container(
                   alignment: Alignment.bottomLeft,
-                  color: Colors.orange,
+                  color: Colors.black26,
                   child: Container(
                     margin: const EdgeInsets.all(12),
                     child: Form(

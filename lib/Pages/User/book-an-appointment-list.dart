@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-signin.dart';
 import 'package:sittler_app/Pages/User/book-a-sittler.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 class BookAnAppointment extends StatefulWidget {
   @override
@@ -29,7 +30,10 @@ class _BookAnAppointmentState extends State<BookAnAppointment> {
 
   Future getAllUser() async {
     try {
-      final res = await FirebaseFirestore.instance.collection("table-staff").get();
+      final res = await FirebaseFirestore.instance
+          .collection("table-staff")
+          .where("active", isEqualTo: true)
+          .get();
 
       for (var doc in res.docs) {
         listUsers.add(doc.data());
@@ -124,19 +128,11 @@ class _BookAnAppointmentState extends State<BookAnAppointment> {
                 ),
                 OutlinedButton(
                     onPressed: () {
-                      // CherryToast.warning(
-                      //   title: const Text(''),
-                      //   displayTitle: false,
-                      //   //autoDismiss: true,
-                      //   // description: const Text('Have A Nice Day !!!'),
-                      //   // animationType: ANIMATION_TYPE.fromTop,
-                      //   // actionStyle: const TextStyle(color: Colors.green),   
-                      //   animationDuration: const Duration(milliseconds: 1000),
-                      //   // action: const Text('OK'),
-                      //   actionHandler: () {},
-                      // )
-                      // .show(context);
-                      setState(() {});
+                      CherryToast.warning(
+                        title: const Text(''),
+                        displayTitle: false,
+                       
+                      );
                     },
                     child: const Text("Click Refresh Page"))
               ],
@@ -175,7 +171,7 @@ class _BookAnAppointmentState extends State<BookAnAppointment> {
                         const SizedBox(
                           height: 4,
                         ),
-                        Text(listUsers[index]['address'] ?? "Philippines"),
+                        Text(listUsers[index]['address'] ?? "Pakistan"),
                         const SizedBox(
                           height: 4,
                         ),
