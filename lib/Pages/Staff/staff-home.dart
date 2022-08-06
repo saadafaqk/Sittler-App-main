@@ -6,6 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-signin.dart';
+import 'package:sittler_app/Pages/User/book-an-appointment-list.dart';
+import 'package:sittler_app/Route-Navigator/route-navigator.dart';
+import 'package:sittler_app/Widgets/elevated-button.dart';
 import 'package:sittler_app/Widgets/sizebox.dart';
 import 'package:sittler_app/Pages/Staff/staff_settings.dart';
 
@@ -88,7 +91,7 @@ const staffsettings(),
         
 
 
-          body: 
+          body:  
         StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("table-staff")
@@ -96,7 +99,7 @@ const staffsettings(),
               .where('active', isEqualTo: true)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
-            //final currentUser = snapshot.data?.docs;
+            final currentUser = snapshot.data?.docs;
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                   child: CircularProgressIndicator(
@@ -115,14 +118,14 @@ const staffsettings(),
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     addVerticalSpace(10),
-                    const Text(
-                      'Hi, Welcome to Baby Sittler App ',
+                    Text(
+                      'Hi ' + '${currentUser![0]['fullName']}',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    // addVerticalSpace(50),
-                    // ElevatedButtonStyle.elevatedButton("List of Sittlers", onPressed: () {
-                    //   RouteNavigator.gotoPage(context, BookAnAppointment());
-                    // }),
+                    addVerticalSpace(50),
+                    ElevatedButtonStyle.elevatedButton("List of Sittlers", onPressed: () {
+                      RouteNavigator.gotoPage(context, BookingList());
+                    }),
                   ],
                 ),
               );
