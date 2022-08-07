@@ -4,7 +4,6 @@ import 'package:provider/src/provider.dart';
 import 'package:sittler_app/ConstantValue/services-type-of-doctor.dart';
 import 'package:sittler_app/Controller-Provider/Staff-Controller/signin-signup-controller-staff.dart';
 import 'package:sittler_app/Model/staff-model.dart';
-import 'package:sittler_app/Pages/Staff/doc_submit.dart';
 import 'package:sittler_app/Widgets/elevated-button.dart';
 import 'package:sittler_app/Widgets/sizebox.dart';
 import 'package:sittler_app/Widgets/textformfied.dart';
@@ -186,9 +185,10 @@ class _StaffSignUpState extends State<StaffSignUp> {
                   }
                   print("Success!!!");
                   // Navigator.pushNamed(context, '/doc_submit.dart');
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const docupload()));
+                  // Navigator.push(context, MaterialPageRoute(builder: (_) => const docupload()));
                 }),
                 addVerticalSpace(20),
+                
               ],
             ),
           ),

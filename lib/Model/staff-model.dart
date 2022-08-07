@@ -7,7 +7,6 @@ class StaffModel {
   String? gender;
   bool? active;
   String? token;
-
   String? imageUrl = "";
   Map? position;
   double? distance;

@@ -3,9 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:flutter/material.dart';
-import 'package:sittler_app/Pages/User/my-booking-list.dart';
+import 'package:sittler_app/Pages/User/Parent-chat.dart';
 import 'package:sittler_app/Pages/User/parent_settings.dart';
-import 'package:sittler_app/Pages/User/user_chat.dart';
 import 'package:sittler_app/Pages/User/user_dashboard.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'book-an-appointment-list.dart';
@@ -25,8 +24,8 @@ class _UserHomeState extends State<UserHome> {
 final screens = [
 const user_dash(),
  BookAnAppointment(),
+const Center(child: Text('Booking Detail', style: TextStyle(fontSize: 60),),),
 const MyBookingList(),
-const user_chat(),
 // const Center(child: Text('Chat', style: TextStyle(fontSize: 60),),),
 const UserDrawer()
 ];
@@ -68,12 +67,7 @@ const UserDrawer()
       
       child: Scaffold(
         key: _key,
-        appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xff004aa0),
-            elevation: 0,
-          ),
+        
         // drawer: const UserDrawer(),
         body:
         

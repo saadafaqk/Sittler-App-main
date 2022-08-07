@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sittler_app/Pages/Onboarding-Screen/onboarding.dart';
+import 'package:sittler_app/Pages/Onboarding-Screen/verifyuser.dart';
 
 
 
@@ -54,7 +54,7 @@ class splash extends StatelessWidget {
               maximumSize: const Size(200, 40) //////// HERE
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const Onboarding()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const verifyuser()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

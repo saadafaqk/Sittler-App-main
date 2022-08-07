@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sittler_app/Admin/admin-dashboard.dart';
 import 'package:sittler_app/Model/user-model.dart';
-import 'package:sittler_app/Pages/Onboarding-Screen/onboarding.dart';
+import 'package:sittler_app/Pages/Onboarding-Screen/verifyuser.dart';
 import 'package:sittler_app/Pages/Staff/staff-home.dart';
 import 'package:sittler_app/Pages/User/user-home.dart';
 import 'package:sittler_app/Route-Navigator/route-navigator.dart';
@@ -29,12 +29,12 @@ class SignUpSignInController with ChangeNotifier {
 
   String get getServiceEmail => userEmail!;
 
-  Stream<QuerySnapshot> getUserServiceEmail() {
-    return FirebaseFirestore.instance
-        .collection("table-staff")
-        .where('email', isEqualTo: userEmail)
-        .snapshots();
-  }
+  // Stream<QuerySnapshot> getUserServiceEmail() {
+  //   return FirebaseFirestore.instance
+  //       .collection("table-staff")
+  //       .where('email', isEqualTo: userEmail)
+  //       .snapshots();
+  // }
 
   Stream<QuerySnapshot> getUserInfo() {
     return FirebaseFirestore.instance
@@ -207,6 +207,8 @@ class SignUpSignInController with ChangeNotifier {
     await FirebaseAuth.instance.signOut();
 
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => const Onboarding()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => const verifyuser()));
   }
+
+  getUserServiceEmail() {}
 }

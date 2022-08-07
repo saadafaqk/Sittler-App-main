@@ -1,19 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-signin.dart';
-import 'package:sittler_app/Pages/User/book-an-appointment-list.dart';
-import 'package:sittler_app/Route-Navigator/route-navigator.dart';
-import 'package:sittler_app/Widgets/elevated-button.dart';
-import 'package:sittler_app/Widgets/sizebox.dart';
 import 'package:sittler_app/Pages/Staff/staff_settings.dart';
 
 import 'booking-list.dart';
-
+ 
 class StaffHome extends StatefulWidget {
   const StaffHome({Key? key}) : super(key: key);
 
@@ -81,59 +75,59 @@ const staffsettings(),
           //       })
           // ],
 
-          actions: [
-            ElevatedButton(onPressed: (){SignUpSignInController.logout(context);}, child: const Text("SIGN OUT",
-                    style: TextStyle(
-                        fontSize: 16, letterSpacing: 2.2, color: Colors.black)),)
-          ],
+          // actions: [
+          //   ElevatedButton(onPressed: (){SignUpSignInController.logout(context);}, child: const Text("SIGN OUT",
+          //           style: TextStyle(
+          //               fontSize: 16, letterSpacing: 2.2, color: Colors.black)),)
+          // ],
             
           ),
         
 
 
           body:  
-        StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("table-staff")
-              .where('email', isEqualTo: user!.email)
-              .where('active', isEqualTo: true)
-              .snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
-            final currentUser = snapshot.data?.docs;
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: Colors.orange,
-              ));
-            }
-            if (snapshot.hasError) {
-              return const Text('Error');
-            } else if (snapshot.data!.docs.isEmpty) {
-              return const Center(
-                  child: Text(
-                      "The admin will confirm your request in order to activate your account.", textAlign: TextAlign.center,));
-            } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    addVerticalSpace(10),
-                    Text(
-                      'Hi ' + '${currentUser![0]['fullName']}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    addVerticalSpace(50),
-                    ElevatedButtonStyle.elevatedButton("List of Sittlers", onPressed: () {
-                      RouteNavigator.gotoPage(context, BookingList());
-                    }),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+        // StreamBuilder(
+        //   stream: FirebaseFirestore.instance
+        //       .collection("table-staff")
+        //       .where('email', isEqualTo: user!.email)
+        //       .where('active', isEqualTo: true)
+        //       .snapshots(),
+        //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
+        //     final currentUser = snapshot.data?.docs;
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return const Center(
+        //           child: CircularProgressIndicator(
+        //         color: Colors.orange,
+        //       ));
+        //     }
+        //     if (snapshot.hasError) {
+        //       return const Text('Error');
+        //     } else if (snapshot.data!.docs.isEmpty) {
+        //       return const Center(
+        //           child: Text(
+        //               "The admin will confirm your request in order to activate your account.", textAlign: TextAlign.center,));
+        //     } else {
+        //       return Center(
+        //         child: Column(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: [
+        //             addVerticalSpace(10),
+        //             Text(
+        //               'Hi ' '${currentUser![0]['fullName']}',
+        //               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        //             ),
+        //             addVerticalSpace(50),
+        //             ElevatedButtonStyle.elevatedButton("List of Sittlers", onPressed: () {
+        //               RouteNavigator.gotoPage(context, const BookingList());
+        //             }),
+        //           ],
+        //         ),
+        //       );
+        //     }
+        //   },
+        // ),
 
-        // screens[_currentIndex],
+        screens[_currentIndex],
     
 
       bottomNavigationBar: BottomNavyBar(

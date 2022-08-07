@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sittler_app/Model/book-model.dart';
 import 'package:http/http.dart' as http;
+import 'package:sittler_app/Widgets/sizebox.dart';
 
 class ChatToStaff extends StatefulWidget {
   final BookModel staffInfo;
@@ -80,12 +81,18 @@ class _ChatToStaffState extends State<ChatToStaff> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+            backgroundColor: Colors.white,
+            foregroundColor: const Color(0xff004aa0),
+            elevation: 0,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CircleAvatar(
-                child: Image.network(widget.staffInfo.userStaff!['imageUrl'].toString()),
+                backgroundImage: NetworkImage(widget.staffInfo.userStaff!['imageUrl'].toString()),
+                // Image.network(widget.staffInfo.userStaff!['imageUrl'].toString()),
               ),
+              addHorizontalSpace(15),
               Text(widget.staffInfo.userStaff!['fullName']),
             ],
           ),
@@ -115,27 +122,25 @@ class _ChatToStaffState extends State<ChatToStaff> {
                             final DocumentSnapshot bookingData =
                                 snapshot.data!.docs[index];
 
-                            return Wrap(
+                            return Align(
                               alignment: bookingData['sender'] == user!.email
-                                  ? WrapAlignment.end
-                                  : WrapAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 6, 2, 6),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      bookingData['text'],
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                          color: bookingData['sender'] == user!.email
-                                              ? Colors.black
-                                              : Colors.blue),
-                                    ),
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Card(
+                                elevation: 8,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(
+                                    bookingData['text'],
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
+                                        color: bookingData['sender'] == user!.email
+                                            ? Colors.black
+                                            : Colors.blue),
                                   ),
                                 ),
-                              ],
+                              ),
                             );
                           });
                     } else {

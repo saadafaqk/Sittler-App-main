@@ -1,24 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sittler_app/Model/staff-model.dart';
-import 'package:sittler_app/Pages/Home-Screen/home.dart';
-import 'package:sittler_app/Pages/Staff/staff-home.dart';
+import 'package:sittler_app/Pages/Onboarding-Screen/verifyuser.dart';
+import 'package:sittler_app/Pages/Staff/doc_submit.dart';
 import 'package:sittler_app/Pages/User/user-home.dart';
 import 'package:sittler_app/Route-Navigator/route-navigator.dart';
 import 'package:sittler_app/Widgets/progress-dialog.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 
-class SignUpSignInControllerStaff with ChangeNotifier {
+import '../../Admin/admin-dashboard.dart';
+import '../../Pages/Staff/staff-home.dart';
+
+class SignUpSignInControllerStaff with ChangeNotifier { 
   User? user = FirebaseAuth.instance.currentUser;
   final _auth = FirebaseAuth.instance;
 
   String? errorMessage;
 
+  String? userEmail;
+
   StaffModel loggedInUser = StaffModel();
+
+  setUserServiceEmail(String? _email) {
+    userEmail = _email;
+    notifyListeners();
+  }
+
+  String get getServiceEmail => userEmail!;
 
   Stream<QuerySnapshot> getUserInfo() {
     return FirebaseFirestore.instance
@@ -46,6 +59,7 @@ class SignUpSignInControllerStaff with ChangeNotifier {
           await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
       myLocation = GeoFirePoint(pos.latitude, pos.longitude);
+String? token = await FirebaseMessaging.instance.getToken();
 
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -53,8 +67,6 @@ class SignUpSignInControllerStaff with ChangeNotifier {
       await user!.updateDisplayName("Staff");
       await user!.reload();
       user = _auth.currentUser;
-
-      String? token = await FirebaseMessaging.instance.getToken();
 
       if (user != null) {
         staffModel!.uid = user!.uid;
@@ -70,7 +82,7 @@ class SignUpSignInControllerStaff with ChangeNotifier {
             .collection("table-staff")
             .doc(user!.uid)
             .set(staffModel.toMap());
-        RouteNavigator.gotoPage(context, const StaffHome());
+        RouteNavigator.gotoPage(context,  const docupload());
         Fluttertoast.showToast(msg: "Account created successfully :) ");
       }
 
@@ -118,8 +130,15 @@ class SignUpSignInControllerStaff with ChangeNotifier {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) async {
-        RouteNavigator.gotoPage(context, const UserHome());
-        notifyListeners();
+        User? usr = FirebaseAuth.instance.currentUser;
+        if (email == "admin@gmail.com" && password == "admin123") {
+          RouteNavigator.gotoPage(context, const AdminDashboard());
+        } else if (usr!.displayName != "Staff") {
+          RouteNavigator.gotoPage(context, const UserHome());
+        } else {
+          RouteNavigator.gotoPage(context, const StaffHome());
+        }
+
         Fluttertoast.showToast(msg: "Login Successful");
 
         print("Logged In");
@@ -154,11 +173,48 @@ class SignUpSignInControllerStaff with ChangeNotifier {
     }
   }
 
+editProfile(
+      String? uid, String? imageUrl, StaffModel staffModel, BuildContext context) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    try {
+      await FirebaseFirestore.instance.collection('table-staff').doc(uid).update({
+        "fullName": staffModel.fullName,
+        "address": staffModel.address,
+        "contactNumber": staffModel.contactNumber,
+        "imageUrl": imageUrl,
+      }).whenComplete(() async {
+        await FirebaseFirestore.instance
+            .collection("table-book")
+            .where("StaffModel.uid", isEqualTo: uid)
+            .get()
+            .then((result) {
+          for (var result in result.docs) {
+            print(result.id);
+            // update also the table book image property
+            FirebaseFirestore.instance.collection('table-book').doc(result.id).update({
+              "StaffModel.imageUrl": imageUrl,
+            }).whenComplete(() {
+              Fluttertoast.showToast(msg: "Successfully Save Changes");
+            });
+          }
+        });
+
+        print("success!");
+      });
+    } on FirebaseException {
+      // print(error);
+      Fluttertoast.showToast(msg: "Something went wrong !!!");
+    }
+  }
+
+
   // the logout function
-  Future<void> logout(BuildContext context) async {
+  static Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
 
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => const MyHomeScreen()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => const verifyuser()));
   }
+  getStaffServiceEmail() {}
 }

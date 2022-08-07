@@ -1,7 +1,17 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-signin.dart';
+import 'package:provider/provider.dart';
+import 'package:sittler_app/Controller-Provider/Staff-Controller/signin-signup-controller-staff.dart';
+
+import 'package:sittler_app/Pages/Staff/Staff-EditProfile-Page.dart';
+
+import '../../Controller-Provider/Theme-Controller/theme-controler-provider.dart';
+import '../../Route-Navigator/route-navigator.dart';
+import '../../Widgets/list-tiles.dart';
+import '../../Widgets/sizebox.dart';
+import '../Utils/darkmode.dart';
 
 class staffsettings extends StatefulWidget {
   const staffsettings({ Key? key }) : super(key: key);
@@ -11,174 +21,147 @@ class staffsettings extends StatefulWidget {
 }
 
 class _staffsettingsState extends State<staffsettings> {
+   User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //   elevation: 1,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //     icon: Icon(
-      //       Icons.arrow_back,
-      //       color: Color(0xff004aa0),
-      //     ),
-      //   ),
-      // ),
-      body: Container(
-        padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
-        child: ListView(
-          children: [
-            const Text(
-              "Settings",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              children: const [
-                Icon(
-                  Icons.person,
-                  color: Color(0xff004aa0),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Account",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const Divider(
-              height: 15,
-              thickness: 2,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            buildAccountOptionRow(context, "Change password"),
-            
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              children: const [
-                Icon(
-                  Icons.volume_up_outlined,
-                  color: Color(0xff004aa0),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Sound",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const Divider(
-              height: 15,
-              thickness: 2,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            buildNotificationOptionRow("Notifications", true),
-            // buildNotificationOptionRow("Account activity", true),
-            // buildNotificationOptionRow("Opportunity", false),
-            const SizedBox(
-              height: 50,
-            ),
-            Center(
-              child: 
-              OutlinedButton(
-                // padding: EdgeInsets.symmetric(horizontal: 40),
-                // shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(20)),
-                onPressed: () {
-                   SignUpSignInController.logout(context);
-                },
-                child: const Text("SIGN OUT",
-                    style: TextStyle(
-                        fontSize: 16, letterSpacing: 2.2, color: Colors.black)),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+    return SafeArea(
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("table-staff")
+            .where('email', isEqualTo: user!.email)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot?> snapshot) {
+          final currentUser = snapshot.data?.docs;
 
-  Row buildNotificationOptionRow(String title, bool isActive) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600]),
-        ),
-        Transform.scale(
-            scale: 0.7,
-            child: CupertinoSwitch(
-              value: isActive,
-              onChanged: (bool val) {},
-            ))
-      ],
-    );
-  }
-
-  GestureDetector buildAccountOptionRow(BuildContext context, String title) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(title),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text("Option 1"),
-                    Text("Option 2"),
-                    Text("Option 3"),
-                  ],
-                ),
-                actions: [
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Close")),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              // width: 300.0,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        Provider.of<ThemeManager>(context, listen: false).getDarkMode ==
+                                true
+                            ? Colors.black.withOpacity(1)
+                            : Colors.white.withOpacity(1),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
                 ],
-              );
-            });
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, top: 24),
+                    child: Row(
+                      children: [
+                        Hero(
+                          tag: "tag1",
+                          child: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage:
+                                NetworkImage("${currentUser![0]['imageUrl']}"),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                        addVerticalSpace(20),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${currentUser[0]['fullName']}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: Colors.green,
+                                
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  addVerticalSpace(20),
+                  const Divider(
+                    color: Colors.grey,
+                  ),
+                  ListTiles.listTile(
+                    label: "Edit Profile",
+                    icon: IconButton(
+                      icon: const Icon(Icons.account_circle),
+                      color: const Color(0xff004aa0),
+                      onPressed: () {},
+                    ),
+                    onTap: () {
+                      RouteNavigator.gotoPage(context, const staffeditpage());
+                    },
+                  ),
+                  const Divider(
+                    color: Colors.grey,
+                  ),
+                  ListTiles.listTile(
+                    label: "Dark Mode",
+                    icon: IconButton(
+                      icon: const Icon(Icons.lightbulb),
+                      color: const Color(0xff004aa0),
+                      onPressed: () {},
+                    ),
+                    onTap: () {
+                      RouteNavigator.gotoPage(context, const darkmode());
+                    },
+          
+                  ),
+                  const Divider(
+                    color: Colors.grey,
+                  ),
+                  ListTiles.listTile(
+                    label: "Settings",
+                    icon: IconButton(
+                      icon: const Icon(Icons.message),
+                      color: const Color(0xff004aa0),
+                      onPressed: () {},
+                    ),
+                    onTap: () {},
+                  ),
+                  const Divider(
+                    color: Colors.grey,
+                  ),
+                  ListTiles.listTile(
+                    label: "Sign Out",
+                    icon: IconButton(
+                      icon: const Icon(Icons.logout),
+                      color: Colors.redAccent,
+                      onPressed: () {},
+                    ),
+                    onTap: () {
+                      SignUpSignInControllerStaff.logout(context);
+                    },
+                  ),
+                  const Divider(
+                    color: Colors.grey,
+                  ),
+                ],
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

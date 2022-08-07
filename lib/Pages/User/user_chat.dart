@@ -15,21 +15,31 @@ class _user_chatState extends State<user_chat> {
       Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            RichText(
-              textAlign: TextAlign.center,
-              text: const TextSpan(
-                text: "Chatting will be done here!",
- style: TextStyle(fontSize: 30.0, color: Colors.black, fontWeight: FontWeight.bold),
-              )
-           
-            )           
-              
-            
-            
+          children: <Widget> [
+            Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Material(
+                                      elevation: 5,
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.orange,
+                                      child: MaterialButton(
+                                          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                          minWidth: MediaQuery.of(context).size.width,
+                                          onPressed: () async {},
+                                          child: const Text(
+                                            "Cancel Transaction",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
           ]
-          ),
-      ) 
+          
+        )
+    )
     );
   }
 }

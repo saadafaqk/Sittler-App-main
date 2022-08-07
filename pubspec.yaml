@@ -74,6 +74,8 @@ dependencies:
   file_picker: ^4.6.1
   google_fonts: ^2.0.0
   toggle_switch: ^2.0.1
+  percent_indicator: ^4.2.2
+  grouped_list: ^5.1.2
 
 
 dev_dependencies:

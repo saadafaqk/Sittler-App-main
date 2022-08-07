@@ -16,7 +16,7 @@ import 'Controller-Provider/Theme-Controller/theme-controler-provider.dart';
 import 'Controller-Provider/User-Controller/user-signup-signin.dart';
 import 'Pages/Onboarding-Screen/onboarding.dart';
 import 'Pages/Staff/staff-home.dart';
-import 'Pages/User/my-booking-list.dart';
+import 'Pages/User/Parent-chat.dart';
 import 'Pages/User/user-home.dart';
 import 'package:http/http.dart' as http;
 

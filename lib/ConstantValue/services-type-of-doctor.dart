@@ -5,13 +5,13 @@ class ServicesTypesOfDoctor {
     {
       'value': "Female",
       'label': "Female",
-      'icon': const Icon(Icons.stop),
+      'icon': const Icon(Icons.radio_button_unchecked),
     },
     {
       'value': "Male",
       'label': "Male",
-      'icon': const Icon(Icons.adjust),
-      'textStyle': const TextStyle(color: Colors.orange),
+      'icon': const Icon(Icons.radio_button_unchecked),
     },
   ];
 }
+ 
