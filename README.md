@@ -9,6 +9,9 @@ Get Sha1 command
 #keytool -genkey -v -keystore c:\Users\User\upload-keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
 
 
+#keytool -genkey -v -keystore c:\Users\User\upload-keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+
+
 
 ## Getting Started
 ##keytool -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999

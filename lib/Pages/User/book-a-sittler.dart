@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -18,14 +19,19 @@ import 'package:sittler_app/Widgets/textformfield-date.dart';
 import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
 import 'package:http/http.dart' as http;
 
+import '../../local-notification-service.dart';
+
 class BookASittler extends StatefulWidget {
   @override
   _BookASittlerState createState() => _BookASittlerState();
 }
 
 class _BookASittlerState extends State<BookASittler> {
-  late AndroidNotificationChannel channel;
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  final streamCtlr = StreamController<String>.broadcast();
+  final titleCtlr = StreamController<String>.broadcast();
+  final bodyCtlr = StreamController<String>.broadcast();
+  // late AndroidNotificationChannel channel;
+  // late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
@@ -149,6 +155,19 @@ class _BookASittlerState extends State<BookASittler> {
     print("OKEKESSS");
     print(user!.uid);
     dis();
+    FirebaseMessaging.instance.getInitialMessage();
+
+    //ForegroundNotification
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotificationService.display(event);
+    });
+
+    //BackgroundNotification
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      LocalNotificationService.display(event);
+    });
+
+    FirebaseMessaging.instance.subscribeToTopic('subscription');
   }
 
   getAllData() {
@@ -166,31 +185,69 @@ class _BookASittlerState extends State<BookASittler> {
     print(events.length);
   }
 
-  void sendPushMessage(String token, String title, String body) async {
+  sendNotification(String title, String token) async {
+    final data = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'message': title,
+    };
+
     try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization':
-              'key=AAAAK-9tvqM:APA91bFSuuKsJVoTuNC19D_Tg1QkmW2Cfbfop879_daYGyvQYOa3zWBP2qcQwRfUPf5UVsJ01-xc6ZTfnz5cBjrkRQRRUPRshiflERqjCdU5byGIoHma8XrVuO2HPEE4FHCWUyTW5D9X',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{'body': body, 'title': title},
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done'
-            },
-            "to": token,
-          },
-        ),
-      );
-    } catch (e) {
-      print("error push notification");
+      http.Response response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization':
+                    'key=AAAAK-9tvqM:APA91bFSuuKsJVoTuNC19D_Tg1QkmW2Cfbfop879_daYGyvQYOa3zWBP2qcQwRfUPf5UVsJ01-xc6ZTfnz5cBjrkRQRRUPRshiflERqjCdU5byGIoHma8XrVuO2HPEE4FHCWUyTW5D9X'
+              },
+              body: jsonEncode(<String, dynamic>{
+                'notification': <String, dynamic>{
+                  'title': title,
+                  'body': 'You are followed by someone'
+                },
+                'priority': 'high',
+                'data': data,
+                'to': '$token'
+              }));
+
+      // handle when app completely closed by the user
+      terminateNotification();
+
+      if (response.statusCode == 200) {
+        print("Yeh notificatin is sended");
+      } else {
+        print("Error");
+      }
+    } catch (e) {}
+  }
+
+  // handle when app completely closed by the user
+  terminateNotification() async {
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      if (initialMessage.data.containsKey('data')) {
+        // Handle data message
+        streamCtlr.sink.add(initialMessage.data['data']);
+
+        LocalNotificationService.display(initialMessage.data['data']);
+      }
+      if (initialMessage.data.containsKey('notification')) {
+        // Handle notification message
+        streamCtlr.sink.add(initialMessage.data['notification']);
+        LocalNotificationService.display(initialMessage.data['notification']);
+      }
+      // Or do other work.
+      titleCtlr.sink.add(initialMessage.notification!.title!);
+      bodyCtlr.sink.add(initialMessage.notification!.body!);
     }
+  }
+
+  dispose() {
+    streamCtlr.close();
+    bodyCtlr.close();
+    titleCtlr.close();
   }
 
   @override
@@ -247,7 +304,7 @@ class _BookASittlerState extends State<BookASittler> {
                                 margin: const EdgeInsets.all(8),
                                 width: 100,
                                 height: 100,
-                                child: CachedNetworkImage(
+                                 child: CachedNetworkImage(
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.cover,
@@ -609,6 +666,8 @@ class _BookASittlerState extends State<BookASittler> {
                                           }
 
                                           if (canBook) {
+                                            sendNotification(
+                                                "Testing", currentUser[0]['token']);
                                             // DocumentSnapshot snap =
                                             //     await FirebaseFirestore.instance
                                             //         .collection("table-staff")
@@ -617,10 +676,10 @@ class _BookASittlerState extends State<BookASittler> {
                                             //
                                             // String token = snap['token'];
 
-                                            sendPushMessage(
-                                                currentUser[0]['token'],
-                                                "${loggedInUser.fullName}",
-                                                "is booking to you.");
+                                            // sendPushMessage(
+                                            //     currentUser[0]['token'],
+                                            //     "${loggedInUser.fullName}",
+                                            //     "is booking to you.");
                                             context
                                                 .read<BookingProvider>()
                                                 .bookingAdd(bookModel);

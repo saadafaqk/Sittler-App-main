@@ -59,7 +59,7 @@ class SignUpSignInControllerStaff with ChangeNotifier {
           await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
       myLocation = GeoFirePoint(pos.latitude, pos.longitude);
-String? token = await FirebaseMessaging.instance.getToken();
+
 
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -67,6 +67,8 @@ String? token = await FirebaseMessaging.instance.getToken();
       await user!.updateDisplayName("Staff");
       await user!.reload();
       user = _auth.currentUser;
+
+      String? token = await FirebaseMessaging.instance.getToken();
 
       if (user != null) {
         staffModel!.uid = user!.uid;

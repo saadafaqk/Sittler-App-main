@@ -1,4 +1,4 @@
-
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -9,6 +9,9 @@ import 'package:provider/src/provider.dart';
 import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-signin.dart';
 import 'package:sittler_app/Pages/User/book-a-sittler.dart';
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:http/http.dart' as http;
+import 'package:sittler_app/Pages/Home-Screen/demo_page.dart';
+
 
 class BookAnAppointment extends StatefulWidget {
   @override
@@ -117,7 +120,7 @@ class _BookAnAppointmentState extends State<BookAnAppointment> {
           // }
 
           if (listUsers.isEmpty) {
-            //print('project snapshot data is: ${projectSnap.data}');
+            print('project snapshot data is: ${projectSnap.data}');
             return Center(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +137,8 @@ class _BookAnAppointmentState extends State<BookAnAppointment> {
                        
                       );
                     },
-                    child: const Text("Click Refresh Page"))
+                    child: 
+                    const Text("Click Refresh Page"))
               ],
             ));
           } else {
@@ -151,7 +155,7 @@ class _BookAnAppointmentState extends State<BookAnAppointment> {
                       imageUrl: listUsers[index]['imageUrl'],
                       progressIndicatorBuilder: (context, url, downloadProgress) =>
                           CircularProgressIndicator(value: downloadProgress.progress),
-                      errorWidget: (context, url, error) => const Icon(
+                      errorWidget: (context, url, error) => Icon(
                         Icons.error,
                         size: 20,
                         color: Colors.red,
