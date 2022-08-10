@@ -14,7 +14,6 @@ import 'Controller-Provider/Staff-Controller/signin-signup-controller-staff.dart
 import 'Controller-Provider/Theme-Controller/theme-controler-provider.dart';
 
 import 'Controller-Provider/User-Controller/user-signup-signin.dart';
-import 'Pages/Home-Screen/demo_page.dart';
 import 'Pages/Onboarding-Screen/onboarding.dart';
 import 'Pages/Staff/staff-home.dart';
 import 'Pages/User/Parent-chat.dart';
