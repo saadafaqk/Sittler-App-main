@@ -10,7 +10,6 @@ import 'package:sittler_app/Controller-Provider/User-Controller/user-signup-sign
 import 'package:sittler_app/Pages/User/book-a-sittler.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:http/http.dart' as http;
-import 'package:sittler_app/Pages/Home-Screen/demo_page.dart';
 
 
 class BookAnAppointment extends StatefulWidget {

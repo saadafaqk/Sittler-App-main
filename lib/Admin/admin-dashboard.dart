@@ -38,7 +38,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         ),
       );
     } catch (e) {
-      print("error push notification");
+      // print("error push notification");
     }
   }
 
@@ -131,7 +131,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                 children: [
                                   OutlinedButton(
                                       onPressed: () async {
-                                        print(bookingData.id);
+                                        // print(bookingData.id);
                                         if (bookingData['active'] == false) {
                                           FirebaseFirestore.instance
                                               .collection('table-staff')
